@@ -19,7 +19,8 @@ function player.load()
 	--We will push and pull here to move him
 	player.speed_x = 0
 	player.speed_y = 0
-	player.max_speed = 100
+	player.max_speed = 200
+	player.airborne = false
 	
 	--initial position for the player
 	player.x = 10
@@ -45,6 +46,7 @@ function player.draw()
 	if debug then
 		--print some debug to screen
 		love.graphics.printf("Player y: "..player.y,0,20,love.graphics.getWidth(),"left")
+		love.graphics.printf("Player X: "..player.x,0,40,love.graphics.getWidth(),"left")
 	end
 	--Draw the player sprite
 	love.graphics.drawq(imgs["player.png"], --drawable object
@@ -61,7 +63,7 @@ end
 
 -- LOGIC
 function player.update(dt)
-	
+	if player.y >= game.floor then player.airborne = false else player.airborne = true end
 	if love.keyboard.isDown("right") or love.keyboard.isDown("left") then
 			if love.keyboard.isDown("left") then 
 				s_sheet.direction_x = -1 
@@ -69,23 +71,25 @@ function player.update(dt)
 				s_sheet.direction_x = 1 
 			end
 		--if we're not moving we don't want standing ( frame 1)
-		if s_sheet.iterator == 1 then s_sheet.iterator = 2 end
+		if s_sheet.iterator == 1 and not player.airborne then s_sheet.iterator = 2 end
 		
 		--movement on x
-		player.speed_x = player.speed_x + 5
+		player.speed_x = player.speed_x + 5 
 		if player.speed_x >= player.max_speed then player.speed_x = player.max_speed end
 		
-		--move the player
-		--player.x = player.x + player.speed_x * dt * s_sheet.direction_x
 		--update our timer
 		s_sheet.timer = s_sheet.timer + dt
 		
 		--only change frames each 0.15 seconds
-			if s_sheet.timer > 0.15 then
-				s_sheet.timer = 0
-				s_sheet.iterator = s_sheet.iterator + 1
-				if s_sheet.iterator > s_sheet.max then
-					s_sheet.iterator = 1
+			if player.airborne then s_sheet.iterator = 1 else
+				if s_sheet.timer > 0.15 then
+					s_sheet.timer = 0
+					
+					if s_sheet.iterator >= s_sheet.max then
+						s_sheet.iterator = 1
+					else
+						s_sheet.iterator = s_sheet.iterator + 1
+					end
 				end
 			end
 	else 
@@ -95,6 +99,7 @@ function player.update(dt)
 		--if we're not pressing left or right show the first frame (standing)
 		s_sheet.iterator = 1
   end
+	--move the player
 	player.x = player.x + player.speed_x * dt * s_sheet.direction_x
 	player.y = player.y + player.speed_y * dt 
 	apply_gravity()
@@ -102,8 +107,12 @@ end
 
 -- KEYBOARD
 function player.keypressed(key)
-	if key == " " and player.y >= 500 and player.y <= 512 then
-		player.speed_y = player.speed_y - 200
+	if key == " " and player.y >= game.floor-1 and player.y <= 510 then
+		--jump
+		--player.airborne = true
+		player.speed_y = player.speed_y - 300
+	else
+		--player.airborne = false
 	end
 end
 
