@@ -4,6 +4,7 @@ game = {}
 function game.load()
   -- background init
   game.clock = 0
+	game.floor = love.graphics.getHeight() - 100
 	love.graphics.setFont(default_font)
 	player.load()
 end
