@@ -9,7 +9,6 @@ function game.load()
 end
 
 function game.draw()
-  -- Draw moving background
       love.graphics.draw(imgs["background.jpg"],0,0)
 			player.draw()
 end
