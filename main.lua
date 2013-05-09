@@ -24,11 +24,12 @@ function love.load()
   -- define colors (global assets)
   bgcolor = {r=0,g=0,b=0}
   fontcolor = {r=255,g=255,b=255}
+	
+	--load splash and game states
   splash.load()
 	game.load()
   -- initial state
   state = "splash" 
-  --load the splash
   
 end
 
@@ -40,11 +41,17 @@ function love.draw()
     0,0 ,love.graphics.getWidth(),love.graphics.getHeight())
   -- Return the color back to normal.
   love.graphics.setColor(255,255,255)
+	
   if state == "splash" then
     splash.draw()
   elseif state == "game" then
     game.draw()
   end
+	
+	if debug then
+		love.graphics.printf("FPS: "..tostring(love.timer.getFPS( )),10,20,love.graphics.getWidth()-20,"right")
+	end
+	
 end
 
 function love.update(dt)
@@ -61,7 +68,9 @@ function love.keypressed(key)
   elseif state == "game" then
 		game.keypressed(key)
 	end
+	
   if key == "`" then
     debug = not debug
   end
+
 end
