@@ -24,7 +24,7 @@ function player.load()
 	
 	--initial position for the player
 	player.x = 10
-	player.y = game.floor
+	player.y = game.floor + player.size_y / 2
 	player.rotation = 0
 
 	--loop from 1 to max number of frames and create the quads
@@ -63,51 +63,59 @@ end
 
 -- LOGIC
 function player.update(dt)
-	if player.y >= game.floor then player.airborne = false else player.airborne = true end
+	--update our timer
+		s_sheet.timer = s_sheet.timer + dt
+		
+	--is he airborne or not
+	if player:getBottom() >= game.floor then player.airborne = false else player.airborne = true end
+	
 	if love.keyboard.isDown("right") or love.keyboard.isDown("left") then
-			if love.keyboard.isDown("left") then 
-				s_sheet.direction_x = -1 
-			elseif love.keyboard.isDown("right") then
-				s_sheet.direction_x = 1 
-			end
-		--if we're not moving we don't want standing ( frame 1)
+		--are we going left or right?
+		if love.keyboard.isDown("left") then 
+			s_sheet.direction_x = -1 
+		elseif love.keyboard.isDown("right") then
+			s_sheet.direction_x = 1 
+		end
+		
+		--if we're not moving we don't want to show standing ( frame 1)
 		if s_sheet.iterator == 1 and not player.airborne then s_sheet.iterator = 2 end
 		
-		--movement on x
+		--accelerate the player
 		player.speed_x = player.speed_x + 5 
 		if player.speed_x >= player.max_speed then player.speed_x = player.max_speed end
 		
-		--update our timer
-		s_sheet.timer = s_sheet.timer + dt
-		
-		--only change frames each 0.15 seconds
+			--only change frames each 0.15 seconds unless airborne stick with frame 1
 			if player.airborne then s_sheet.iterator = 1 else
 				if s_sheet.timer > 0.15 then
 					s_sheet.timer = 0
-					
+					--if we get to the last frame in the sheet
 					if s_sheet.iterator >= s_sheet.max then
-						s_sheet.iterator = 1
+						--then start again
+						s_sheet.iterator = 2
 					else
 						s_sheet.iterator = s_sheet.iterator + 1
 					end
 				end
 			end
+	--if we're not holding left or right then slow down or stop
 	else 
 		--decelerate
-		player.speed_x = player.speed_x - 5
-		if player.speed_x <= 0 then player.speed_x = 0 end
+		if player.speed_x <= 0 then player.speed_x = 0 else 
+			player.speed_x = player.speed_x - 5 
+		end
 		--if we're not pressing left or right show the first frame (standing)
 		s_sheet.iterator = 1
   end
 	--move the player
 	player.x = player.x + player.speed_x * dt * s_sheet.direction_x
-	player.y = player.y + player.speed_y * dt 
+	player.y = player.y + player.speed_y * dt
+	--add gravity
 	apply_gravity()
 end
 
 -- KEYBOARD
 function player.keypressed(key)
-	if key == " " and player.y >= game.floor-1 and player.y <= 510 then
+	if key == " " and player:getBottom() == game.floor then
 		--jump
 		--player.airborne = true
 		player.speed_y = player.speed_y - 300
@@ -119,10 +127,19 @@ end
 
 -- APPLY GRAVITY [[incomplete]]
 function apply_gravity()
-	if player.y < game.floor then
+	if player.getBottom() < game.floor then
 		player.speed_y = player.speed_y + 10
 	else
 		player.speed_y = 0
+		player:setBottom(game.floor)
 	end
 	
+end
+
+function player:getBottom()
+	return player.y + player.size_y / 2
+end
+
+function player:setBottom(bottom)
+	player.y = bottom - player.size_y /2
 end
