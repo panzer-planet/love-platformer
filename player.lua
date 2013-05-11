@@ -1,4 +1,18 @@
---player.lua
+--[[
+player.lua
+ LoVE platformer
+ https://github.com/panzer-planet/love-platformer
+ Copyright 2013, Werner Roets
+ Licensed under GNU General Public License v3
+ Redistributions of files must retain the above copyright notice.
+
+ author: Werner Roets (cobolt.exe@gmail.com)
+ copyright: Copyright 2012, Werner Roets and the cobolt-gallery contributors
+ url: https://github.com/panzer-planet/love-platformer
+ version: 0.1alpha
+ license: GNU GPL v3 (http://www.gnu.org/copyleft/gpl.html)
+]]
+
 player = {}
 
 -- ON LOAD
@@ -38,7 +52,10 @@ function player.load()
 			imgs["player.png"]:getHeight()-- total height of sprite sheet
 		);
 	end
-	
+	--Output to console for debug
+	print("Player initialised")
+	print("player.x "..player.x,
+		"player.y "..player.y)
 end
 
 -- GRAPHICS
@@ -47,6 +64,8 @@ function player.draw()
 		--print some debug to screen
 		love.graphics.printf("Player y: "..player.y,0,20,love.graphics.getWidth(),"left")
 		love.graphics.printf("Player X: "..player.x,0,40,love.graphics.getWidth(),"left")
+		love.graphics.printf("Player Y speed: "..player.speed_y,0,60,love.graphics.getWidth(),"left")
+		love.graphics.printf("Player X speed: "..player.speed_x,0,80,love.graphics.getWidth(),"left")
 	end
 	--Draw the player sprite
 	love.graphics.drawq(imgs["player.png"], --drawable object
