@@ -7,7 +7,6 @@
  Redistributions of files must retain the above copyright notice.
 
  author: Werner Roets (cobolt.exe@gmail.com)
- copyright: Copyright 2012, Werner Roets and the cobolt-gallery contributors
  url: https://github.com/panzer-planet/love-platformer
  version: 0.1alpha
  license: GNU GPL v3 (http://www.gnu.org/copyleft/gpl.html)

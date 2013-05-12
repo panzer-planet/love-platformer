@@ -7,36 +7,32 @@
  Redistributions of files must retain the above copyright notice.
 
  author: Werner Roets (cobolt.exe@gmail.com)
- copyright: Copyright 2012, Werner Roets and the cobolt-gallery contributors
  url: https://github.com/panzer-planet/love-platformer
  version: 0.1alpha
  license: GNU GPL v3 (http://www.gnu.org/copyleft/gpl.html)
 ]]
 
-require('player')
-require('floor')
-require('background')
+require('units/player')
+require('levels/level1')
+
 
 game = {}
 function game.load()
   --game variables
   game.clock = 0
 	game.collision_clock = 0
-	game.floor = love.graphics.getHeight() - 100
 	game.collide = false
 	
 	init_physics()
 	love.graphics.setFont(default_font)
-	background.load()
+	level1.load()
 	player.load()
-	floor.load(game.floor)
-	
 end
 
 function game.draw()
-	background.draw()
+	level1.draw()
 	player.draw()
-	floor.draw()
+	
 	if debug then
 		love.graphics.printf("collide: "..tostring(game.collide),10,40,love.graphics.getWidth()-20,"right")
 	end
@@ -45,9 +41,9 @@ end
 function game.update(dt)
   --update game clock
   game.clock = game.clock + dt
-	background.update(dt)
+	level1.update(dt)
 	player.update(dt)
-	floor.update(dt)
+	
 	local collide = game:checkFloorCollission()
 	if collide then
 		game.collide = true
@@ -56,7 +52,7 @@ function game.update(dt)
 end
 
 function game.keypressed(key)
-	background.keypressed(key)
+	level1.keypressed(key)
 	player.keypressed(key)
 end
 
