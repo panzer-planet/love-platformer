@@ -36,6 +36,7 @@ function player.load()
 	player.max_speed = 200
 	player.airborne = false
 	
+	
 	--initial position for the player
 	player.x = 10
 	player.y = game.floor + player.size_y / 2
@@ -62,10 +63,12 @@ end
 function player.draw()
 	if debug then
 		--print some debug to screen
-		love.graphics.printf("Player y: "..player.y,0,20,love.graphics.getWidth(),"left")
+		--[[
+		love.graphics.printf("Player y: "..player.y,0,20,love.graphics.getWidth(),"center")
 		love.graphics.printf("Player X: "..player.x,0,40,love.graphics.getWidth(),"left")
 		love.graphics.printf("Player Y speed: "..player.speed_y,0,60,love.graphics.getWidth(),"left")
 		love.graphics.printf("Player X speed: "..player.speed_x,0,80,love.graphics.getWidth(),"left")
+		]]
 	end
 	--Draw the player sprite
 	love.graphics.drawq(imgs["player.png"], --drawable object
@@ -144,7 +147,7 @@ function player.keypressed(key)
 end
 
 
--- APPLY GRAVITY [[incomplete]]
+-- APPLY GRAVITY 
 function apply_gravity()
 	if player.getBottom() < game.floor then
 		player.speed_y = player.speed_y + 10

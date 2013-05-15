@@ -31,7 +31,8 @@ function love.load()
 	game.load()
 	
   -- initial state
-  state = "splash" 
+  state = "splash"
+	if debug then state = "game" end
 end
 
 function love.draw()

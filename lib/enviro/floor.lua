@@ -11,8 +11,22 @@
  version: 0.1alpha
  license: GNU GPL v3 (http://www.gnu.org/copyleft/gpl.html)
 ]]
+require('lib/error')
 
 floor = {}
+
+function floor:new(o)
+	if not o then return error:noConstructorObject("floor") 
+	elseif not platform:validateConstructorObject(o) then 
+		return error:invalidConstructorObject(o) 
+	end
+	floor.load(o.y)
+end
+
+function floor:validateConstructorObject(o)
+	if not o.y then return false end
+	return true
+end
 
 function floor.load(o)
 	floor.top = o

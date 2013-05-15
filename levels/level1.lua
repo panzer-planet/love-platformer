@@ -14,18 +14,22 @@
 
 require('lib/enviro/floor')
 require('lib/enviro/background')
+require('lib/enviro/platform')
 
 level1 = {}
 function level1.load()
 	background.load()
-	game.floor = love.graphics.getHeight() - 100
-	floor.load(game.floor)
+	floor.load(love.graphics.getHeight() - 80)
+	
+	level1.platforms = level1:createPlatforms()
 end
 
 function level1.draw()
 	background.draw()
-	
 	floor.draw()
+	for k, v in pairs (level1.platforms) do
+		v:draw()
+	end
 end
 
 function level1.update(dt)
@@ -35,4 +39,25 @@ end
 
 function level1.keypressed(key)
 	background.keypressed(key)
+end
+
+function level1:createPlatforms()
+	local platforms = {}
+		platforms[1] = {
+			x = 100;
+			y = 100;
+			width = 400;
+			height = 40;
+		}
+		platforms[2] = {
+			x = 100;
+			y = 220;
+			width = 300;
+			height = 30;
+		}
+	p = {}
+	for k, v in pairs(platforms) do
+		p[k] = platform:new(v)
+	end
+	return p
 end
